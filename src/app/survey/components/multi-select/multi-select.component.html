@@ -1,0 +1,10 @@
+<form class="question-ctn" [formGroup]="formGroup">
+    <div class="question" [ngClass]="formGroup.invalid ? 'text-rose-500': ''">
+        {{idx + 1}}. {{ questionData.question }}<span *ngIf="questionData.isRequired" class="text-rose-500">*</span>
+    </div>
+    <div class="options-ctn flex flex-column">
+        <ng-container *ngFor="let option of options()">
+            <label><input (change)="onChangeSelect($event)" type="checkbox" name="formValue" [value]="option" />{{ option }}</label>
+        </ng-container>
+    </div>
+</form>

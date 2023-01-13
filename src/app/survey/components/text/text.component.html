@@ -1,0 +1,8 @@
+<div class="question-ctn">
+    <div class="question" [ngClass]="questionData.isRequired && !textAreaElement.nativeElement.value ? 'text-rose-500' : ''">
+        {{idx + 1}}. {{ questionData.question }}<span *ngIf="questionData.isRequired" class="text-rose-500">*</span>
+    </div>
+    <div class="long-text-ctn">
+        <input #textArea (focusout)="onFinishEditing()" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+    </div>
+</div>

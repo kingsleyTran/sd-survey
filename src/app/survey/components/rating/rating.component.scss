@@ -1,0 +1,21 @@
+.question-ctn {
+    padding: 15px;
+    input {
+        margin-right: 10px;
+    }
+    label {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+    }
+    .star-ctn {
+        a {
+            min-width: 50px;
+            &.selected {
+                .star {
+                    color: #ef6c00;
+                }
+            }
+        }
+    }
+}

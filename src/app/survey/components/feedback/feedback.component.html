@@ -1,0 +1,19 @@
+<div class="container">
+    <ng-container *ngIf="validId">
+        <div class="question-ctn">
+            <div class="question" >
+                Share with us your feedback or any recommendations for better service:
+            </div>
+            <div class="long-text-ctn">
+                <textarea rows="10" [(ngModel)]="feedback" name="question-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+            </div>
+        </div>
+
+        <div class="action-ctn">
+            <a [ngClass]="!feedback || feedback === '' ? 'disable' : ''" class="submit-btn" href="javascript:void(0)" (click)="onSubmit()">Submit</a>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!validId">
+        Invalid URL, please try again.
+    </ng-container>
+</div>

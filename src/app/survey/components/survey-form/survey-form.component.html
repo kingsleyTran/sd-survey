@@ -1,0 +1,17 @@
+<div class="container">
+    <ng-container *ngIf="validId">
+        <ng-container *ngFor="let question of questions; let idx = index">
+            <app-multi-select (onChangeCheckBox)="onReceiveResponse($event, question)" *ngIf="question.type === 'multi-select'" [questionData]="question" [idx]="idx"></app-multi-select>
+            <app-rating (onRating)="onRating($event, question)" *ngIf="question.type === 'rating'" [questionData]="question" [idx]="idx"></app-rating>
+            <app-long-text (onFocusOut)="onReceiveResponse($event, question)" *ngIf="question.type === 'textarea'" [questionData]="question" [idx]="idx"></app-long-text>
+            <app-text (onFocusOut)="onReceiveResponse($event, question)" *ngIf="question.type === 'text'" [questionData]="question" [idx]="idx"></app-text>
+            <app-contact-form (onChangeFormEmitter)="onReceiveContactInfo($event, question)" *ngIf="question.type === 'contact-form'" [questionData]="question" [idx]="idx"></app-contact-form>
+        </ng-container>
+        <div class="action-ctn">
+            <a [ngClass]="!enableSubmitBtn() ? 'disable' : ''" class="submit-btn" href="javascript:void(0)" (click)="onSubmit()">Submit</a>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!validId">
+        Invalid URL, please try again.
+    </ng-container>
+</div>

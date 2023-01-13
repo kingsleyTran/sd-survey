@@ -1,0 +1,12 @@
+.container {
+    height: calc(100vh - 65px);
+    .response {
+        padding: 15px;
+        border-left: solid 5px #ff6f00;
+        margin: 0;
+        white-space: pre-line;
+    }
+    .question {
+        padding: 10px 0;
+    }
+}

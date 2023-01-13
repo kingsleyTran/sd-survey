@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "savourydining"
+  },
+  "targets": {
+    "savourydining": {
+      "hosting": {
+        "savourydining": [
+          "sd-survey"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

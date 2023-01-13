@@ -1,0 +1,43 @@
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+@import 'ngx-toastr/toastr';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "FontMedium";
+  src: url("https://firebasestorage.googleapis.com/v0/b/savourydining.appspot.com/o/fonts%2FDTPhudu-Medium.otf?alt=media&token=f6cbd558-c26c-474d-8937-87402c5f1443");
+}
+@font-face {
+  font-family: "BoldFont";
+  src: url("https://firebasestorage.googleapis.com/v0/b/savourydining.appspot.com/o/fonts%2FDTPhudu-Bold.otf?alt=media&token=3b385739-7c27-4701-8a2d-95ab33bcd1e8");
+}
+
+#table-search {
+  padding-left: 35px!important;
+  margin-left: 1px;
+}
+
+body {
+  //overflow: hidden;
+  background: #cccccc;
+}
+
+tbody {
+  height: 60vh;
+  display: block;
+  overflow: auto;
+}
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;/* even columns width , fix width of table too*/
+}
+
+input, textarea {
+  outline: none;
+  outline-width: 0px!important;
+  --tw-ring-shadow: none!important;
+}

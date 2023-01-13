@@ -1,0 +1,18 @@
+<div class="container" *ngIf="formData">
+    <ng-container *ngFor="let record of data; let idx = index">
+        <div class="question">{{ idx + 1 }}. {{ record.question }}</div>
+        <div class="response">
+            {{ parseResponse(record.response) }}
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="formData.feedback">
+        <div class="question"> Feedback:</div>
+        <div class="response">
+            {{ formData.feedback }}
+        </div>
+    </ng-container>
+</div>
+<div *ngIf="!formData">
+    Response not found!
+</div>
