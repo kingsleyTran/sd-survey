@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {LoaderService} from "@shared/services/loader.service";
 import {TranslateService} from "@ngx-translate/core";
+import {LIMIT} from "@assets/const";
 
 export interface Response extends BaseObject{
   id: string;
@@ -58,38 +59,48 @@ export class ResponseListComponent extends BaseListComponent {
   }
 
   onSelectDate(): void{
-    this.firstItem = null;
-    const now = new Date();
-    now.setFullYear(this.filterDate.year);
-    now.setMonth(this.filterDate.month - 1);
-    now.setDate(this.filterDate.day);
+    if (this.filterDate) {
+      this.firstItem = null;
+      const now = new Date();
+      now.setFullYear(this.filterDate.year);
+      now.setMonth(this.filterDate.month - 1);
+      now.setDate(this.filterDate.day);
 
-    const startTime: any = now;
-    startTime.setHours(0);
-    startTime.setMinutes(0);
-    startTime.setSeconds(0);
-    this.startTimeStamp = Math.floor(startTime);
+      const startTime: any = now;
+      startTime.setHours(0);
+      startTime.setMinutes(0);
+      startTime.setSeconds(0);
+      this.startTimeStamp = Math.floor(startTime);
 
-    const endNow = new Date();
-    endNow.setFullYear(this.filterDate.year);
-    endNow.setMonth(this.filterDate.month - 1);
-    endNow.setDate(this.filterDate.day);
-    const endTime: any = endNow;
-    endTime.setHours(23);
-    endTime.setMinutes(59);
-    endTime.setSeconds(59);
+      const endNow = new Date();
+      endNow.setFullYear(this.filterDate.year);
+      endNow.setMonth(this.filterDate.month - 1);
+      endNow.setDate(this.filterDate.day);
+      const endTime: any = endNow;
+      endTime.setHours(23);
+      endTime.setMinutes(59);
+      endTime.setSeconds(59);
 
-    this.endTimeStamp = Math.floor(endTime);
+      this.endTimeStamp = Math.floor(endTime);
 
-    this.firstResponse = null;
-    this.lastResponse = null;
-    const searchQuery = this.firestoreQuery.where(
-        'createdAt', '<', this.endTimeStamp
-    ).where(
-        'createdAt', '>=', this.startTimeStamp
-    );
-    this.objectCollection = this.afs.collection(this.collectionName, () => searchQuery);
-    this.disableGoNext = false;
-    this.onAfterLoadData();
+      this.firstResponse = null;
+      this.lastResponse = null;
+      const searchQuery = this.firestoreQuery.where(
+          'createdAt', '<', this.endTimeStamp
+      ).where(
+          'createdAt', '>=', this.startTimeStamp
+      );
+      this.objectCollection = this.afs.collection(this.collectionName, () => searchQuery);
+      this.disableGoNext = false;
+      this.onAfterLoadData();
+    } else {
+      this.objectCollection = this.afs.collection(this.collectionName, (ref) => {
+        this.firestoreQuery = ref.limit(LIMIT + 1)
+            .orderBy("createdAt", "desc")
+        ;
+        return this.firestoreQuery;
+      });
+      this.onAfterLoadData();
+    }
   }
 }
