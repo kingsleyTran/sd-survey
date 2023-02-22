@@ -8,12 +8,20 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class WelcomeComponent implements OnInit {
 
+  locationHash: any = {
+    'penrith': 'Penrith',
+    'ns': 'North Strathfield'
+  }
+  location: string;
+
   constructor(
       public router: Router,
       public activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
+    const id = this.activatedRoute.snapshot?.params.id;
+    this.location = this.locationHash[id];
   }
 
   startSurvey() {

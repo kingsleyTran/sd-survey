@@ -8,11 +8,11 @@
 
 @font-face {
   font-family: "FontMedium";
-  src: url("https://firebasestorage.googleapis.com/v0/b/savourydining.appspot.com/o/fonts%2FDTPhudu-Medium.otf?alt=media&token=f6cbd558-c26c-474d-8937-87402c5f1443");
+  src: url("./assets/fonts/DTPhudu-Medium.otf");
 }
 @font-face {
   font-family: "BoldFont";
-  src: url("https://firebasestorage.googleapis.com/v0/b/savourydining.appspot.com/o/fonts%2FDTPhudu-Bold.otf?alt=media&token=3b385739-7c27-4701-8a2d-95ab33bcd1e8");
+  src: url("./assets/fonts/DTPhudu-Bold.otf");
 }
 
 #table-search {
@@ -40,4 +40,26 @@ input, textarea {
   outline: none;
   outline-width: 0px!important;
   --tw-ring-shadow: none!important;
+}
+
+.store-badge {
+  position: absolute;
+  z-index: 1000;
+  border: solid 2px white;
+  border-radius: 0;
+  text-align: center;
+  margin-left: 30px;
+  font-family: boldFont;
+  padding: 13px;
+  color: white;
+  top: 20px;
+  right: 20px;
+  width: 140px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+td {
+  overflow: hidden;
+  word-break: break-all;
 }

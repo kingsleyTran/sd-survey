@@ -27,6 +27,12 @@ export class SurveyFormComponent implements OnInit {
   email: string = "";
   phone: string = "";
 
+  locationHash: any = {
+    'penrith': 'Penrith',
+    'ns': 'North Strathfield'
+  }
+  location: string;
+
   reviewHash: any = {
     'penrith': 'https://search.google.com/local/writereview?placeid=ChIJeQUnJOCFEmsRVXjRQMjuVPw',
     'ns': 'https://search.google.com/local/writereview?placeid=ChIJ0RN60y6lEmsRpfoLXuACES0',
@@ -43,7 +49,8 @@ export class SurveyFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot?.params.id
+    const id = this.activatedRoute.snapshot?.params.id;
+    this.location = this.locationHash[id];
     this.validId = Object.keys(this.reviewHash).includes(id);
     if (!this.validId) {
       return;

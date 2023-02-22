@@ -35,6 +35,9 @@ export class ResponseListComponent extends BaseListComponent {
   protected objectCollection: AngularFirestoreCollection<Response>;
   objectList: Response[];
   reviewHash = reviewHash;
+  filterDate: any;
+  startTimeStamp: number;
+  endTimeStamp: number;
 
   constructor(
       protected afs: AngularFirestore,
@@ -52,5 +55,41 @@ export class ResponseListComponent extends BaseListComponent {
       this.loaderService.hide();
       return { id: a.payload.doc.id, ...a.payload.doc.data() } as Response;
     });
+  }
+
+  onSelectDate(): void{
+    this.firstItem = null;
+    const now = new Date();
+    now.setFullYear(this.filterDate.year);
+    now.setMonth(this.filterDate.month - 1);
+    now.setDate(this.filterDate.day);
+
+    const startTime: any = now;
+    startTime.setHours(0);
+    startTime.setMinutes(0);
+    startTime.setSeconds(0);
+    this.startTimeStamp = Math.floor(startTime);
+
+    const endNow = new Date();
+    endNow.setFullYear(this.filterDate.year);
+    endNow.setMonth(this.filterDate.month - 1);
+    endNow.setDate(this.filterDate.day);
+    const endTime: any = endNow;
+    endTime.setHours(23);
+    endTime.setMinutes(59);
+    endTime.setSeconds(59);
+
+    this.endTimeStamp = Math.floor(endTime);
+
+    this.firstResponse = null;
+    this.lastResponse = null;
+    const searchQuery = this.firestoreQuery.where(
+        'createdAt', '<', this.endTimeStamp
+    ).where(
+        'createdAt', '>=', this.startTimeStamp
+    );
+    this.objectCollection = this.afs.collection(this.collectionName, () => searchQuery);
+    this.disableGoNext = false;
+    this.onAfterLoadData();
   }
 }

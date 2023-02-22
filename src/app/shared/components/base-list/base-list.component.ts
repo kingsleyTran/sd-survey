@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection, Query} from '@angular/fire/compat/firestore';
-import {Observable} from 'rxjs';
+import {Observable, take} from 'rxjs';
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoaderService} from "@shared/services/loader.service";
 import {LIMIT} from "@assets/const";
@@ -31,23 +31,25 @@ export class BaseListComponent implements OnInit {
   // For pagination
   firstItem: any = null;
   firstResponse: any = null;
+  firstItems: any[] = [];
+  currentPage: number = 0;
   lastResponse: any = null;
   disableGoNext: boolean = false;
   disableGoBack: boolean = true;
 
   constructor(
-    protected afs: AngularFirestore,
-    protected activatedRoute: ActivatedRoute,
-    protected router: Router,
-    protected storage: AngularFireStorage,
-    public loaderService: LoaderService,
-    public translateService: TranslateService
+      protected afs: AngularFirestore,
+      protected activatedRoute: ActivatedRoute,
+      protected router: Router,
+      protected storage: AngularFireStorage,
+      public loaderService: LoaderService,
+      public translateService: TranslateService
   ) { }
 
   ngOnInit(): void {
     this.objectCollection = this.afs.collection(this.collectionName, (ref) => {
       this.firestoreQuery = ref.limit(LIMIT + 1)
-        .orderBy("createdAt", "asc")
+        .orderBy("createdAt", "desc")
       ;
       return this.firestoreQuery;
     });
@@ -83,11 +85,11 @@ export class BaseListComponent implements OnInit {
         }
         this.afs.collection(this.collectionName).doc(id).delete();
         Swal.fire(
-          'Deleted!',
-          'The item has been deleted.',
-          'success'
+            'Deleted!',
+            'The item has been deleted.',
+            'success'
         )
-        if (id === this.firstItem.id) {
+        if (id === this.firstItem.id || !this.firstItem) {
           this.disableGoBack = true;
         }
       }
@@ -95,30 +97,34 @@ export class BaseListComponent implements OnInit {
   }
 
   search(): void {
+    this.firstItem = null;
     this.firstResponse = null;
     this.lastResponse = null;
     const searchQuery = this.firestoreQuery.where(
-      'name', '>=', this.searchKeyword
+        'name', '>=', this.searchKeyword
     ).where(
-      'name', '<=', this.searchKeyword + '\uf8ff'
+        'name', '<=', this.searchKeyword + '\uf8ff'
     );
     this.objectCollection = this.afs.collection(this.collectionName, () => searchQuery);
     this.disableGoNext = false;
+    this.disableGoBack = true;
     this.onAfterLoadData();
   }
 
   prevPage() {
-    const prevQuery = this.firestoreQuery.endAt(this.firstResponse);
+    this.currentPage -= 1;
+    const prevQuery = this.firestoreQuery.startAt(this.firstItems[this.currentPage]);
     this.objectCollection = this.afs.collection(this.collectionName, () => prevQuery);
     this.disableGoNext = false;
-    this.onAfterLoadData();
+    this.onAfterLoadData(false);
   }
 
   nextPage() {
+    this.currentPage += 1;
     const nextQuery = this.firestoreQuery.startAfter(this.lastResponse);
     this.objectCollection = this.afs.collection(this.collectionName, () => nextQuery);
     this.disableGoBack = false;
-    this.onAfterLoadData();
+    this.onAfterLoadData(true);
   }
 
   mappingResponse(resp: any[]) {
@@ -128,23 +134,34 @@ export class BaseListComponent implements OnInit {
     });
   }
 
-  protected onAfterLoadData() {
+  protected onAfterLoadData(isGoNext = true) {
     this.loaderService.show();
-    this.subscriber$ = this.objectCollection.snapshotChanges();
-    this.subscriber$.subscribe((resp) => {
+    const subscriber = this.objectCollection.snapshotChanges().pipe(take(1)).subscribe((resp) => {
       this.isEmpty = !resp.length;
       if (this.isEmpty) return;
       if (!this.firstItem) {
         this.firstItem = resp[0].payload.doc;
+      } else {
+        this.disableGoBack = this.firstItem.id === resp[0].payload.doc.id;
       }
-      this.disableGoBack = this.firstItem.id === resp[0].payload.doc.id;
       this.disableGoNext = resp.length <= LIMIT;
+      if (isGoNext && this.firstResponse) {
+        const existedItem = this.firstItems.filter((item) => {
+          return item.id === this.firstResponse.id
+        });
+        if (existedItem.length === 0) {
+          this.firstItems.push(this.firstResponse);
+        }
+      }
       this.firstResponse = resp[0].payload.doc;
       this.lastResponse = this.disableGoNext ? resp[resp.length - 1].payload.doc : resp[resp.length - 2].payload.doc
       if (!this.disableGoNext) {
         resp.pop();
       }
       this.mappingResponse(resp);
+      // if (unsubscribe) {
+      //   subscriber.unsubscribe();
+      // }
     });
   }
 

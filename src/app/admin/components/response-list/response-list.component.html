@@ -4,9 +4,31 @@
     </div>
 </header>
 <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-    <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-        <table *ngIf="!isEmpty" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="flex justify-content-between">
+        <div class="spacer"></div>
+        <div class="input-group w-25">
+            <input
+                    class="form-control"
+                    placeholder="dd/mm/yyyy"
+                    name="d2"
+                    #c2="ngModel"
+                    [(ngModel)]="filterDate"
+                    ngbDatepicker
+                    #d="ngbDatepicker"
+                    (blur)="onSelectDate()"
+                    (dateSelect)="onSelectDate()"
+            />
+            <button (click)="d.toggle()" type="button" class="calendar-btn">
+                <svg class="w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="overflow--auto relative shadow-md sm:rounded-lg">
+        <table *ngIf="!isEmpty" class="w-full text-sm text-left text-gray-500 xxxx:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 xxxx:bg-gray-700 xxxx:text-gray-400">
             <tr>
 
                 <th scope="col" class="py-3 px-6">
@@ -24,32 +46,38 @@
                 <th scope="col-2" class="py-3 px-6">
                     Store
                 </th>
+                <th scope="col-2" class="py-3 px-6">
+                    Review date
+                </th>
             </tr>
             </thead>
             <tbody>
 
-            <tr *ngFor="let resp of objectList" class="cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 hover:bg-sky-500" (click)="openDetailForm(resp.id)">
-                <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+            <tr *ngFor="let resp of objectList" class="cursor-pointer bg-white border-b xxxx:bg-gray-800 xxxx:border-gray-700 hover:bg-gray-50 xxxx:hover:bg-gray-600 hover:bg-sky-500" (click)="openDetailForm(resp.id)">
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     {{ resp.name }}
                 </td>
-                <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     {{ resp.email }}
                 </td>
-                <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     {{ resp.phone }}
                 </td>
-                <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     <span *ngIf="!resp.googleReview" class="text-red-700">No</span>
                     <span *ngIf="resp.googleReview" class="text-green-700">Yes</span>
                 </td>
-                <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     {{ reviewHash[resp.store] }}
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ resp.createdAt | date:'YYYY-MM-dd HH:mm' }}
                 </td>
             </tr>
             </tbody>
         </table>
         <nav *ngIf="!isEmpty"  class="flex justify-between items-center p-4" aria-label="Table navigation">
-            <span class="text-sm font-normal text-gray-500 dark:text-gray-400"></span>
+            <span class="text-sm font-normal text-gray-500 xxxx:text-gray-400"></span>
             <ul class="inline-flex items-center -space-x-px">
                 <li>
                     <a href="javascript:void(0)" (click)="prevPage()" class="block py-2 px-3 ml-0 leading-tight text-white bg-sky-300 rounded-l-lg border hover:bg-sky-500" [ngClass]="disableGoBack ? 'pointer-events-none bg-gray-500' : ''">
@@ -71,7 +99,7 @@
                 <div class="h-96 rounded-lg border-4 border-dashed border-gray-200 flex flex-col items-center justify-center space-y-6">
                     <h2 class="text-blue-600 text-2xl">{{ 'common.emptyTitle' | translate }}</h2>
                     <div class="">{{ 'common.emptyDesc' | translate }}</div>
-                    <button (click)="openNewForm()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <button (click)="openNewForm()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center xxxx:bg-blue-600 xxxx:hover:bg-blue-700 xxxx:focus:ring-blue-800">
                         {{ 'common.addNew' | translate }}
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                     </button>

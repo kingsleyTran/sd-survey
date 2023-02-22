@@ -15,6 +15,12 @@ export class FeedbackComponent implements OnInit {
   feedback: string = "";
   validId = false;
 
+  locationHash: any = {
+    'penrith': 'Penrith',
+    'ns': 'North Strathfield'
+  }
+  location: string;
+
   reviewHash: any = {
     'penrith': 'https://search.google.com/local/writereview?placeid=ChIJeQUnJOCFEmsRVXjRQMjuVPw',
     'ns': 'https://search.google.com/local/writereview?placeid=ChIJ0RN60y6lEmsRpfoLXuACES0',
@@ -32,6 +38,7 @@ export class FeedbackComponent implements OnInit {
 
   ngOnInit(): void {
     const location = this.activatedRoute.snapshot?.params.location
+    this.location = this.locationHash[location];
     this.validId = Object.keys(this.reviewHash).includes(location);
     if (!this.validId) {
       return;

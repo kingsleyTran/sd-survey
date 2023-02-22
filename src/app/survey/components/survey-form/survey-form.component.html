@@ -1,3 +1,4 @@
+<div class="store-badge">{{ location }}</div>
 <div class="container">
     <ng-container *ngIf="validId">
         <ng-container *ngFor="let question of questions; let idx = index">
@@ -7,7 +8,7 @@
             <app-text (onFocusOut)="onReceiveResponse($event, question)" *ngIf="question.type === 'text'" [questionData]="question" [idx]="idx"></app-text>
             <app-contact-form (onChangeFormEmitter)="onReceiveContactInfo($event, question)" *ngIf="question.type === 'contact-form'" [questionData]="question" [idx]="idx"></app-contact-form>
         </ng-container>
-        <div class="action-ctn">
+        <div class="action-ctn" *ngIf="questions">
             <a [ngClass]="!enableSubmitBtn() ? 'disable' : ''" class="submit-btn" href="javascript:void(0)" (click)="onSubmit()">Submit</a>
         </div>
     </ng-container>

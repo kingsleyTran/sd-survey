@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {BaseListComponent, BaseObject} from "@shared/components/base-list/base-list.component";
 import {ActivatedRoute, Router} from "@angular/router";
