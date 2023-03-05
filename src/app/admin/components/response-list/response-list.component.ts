@@ -6,6 +6,7 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {LoaderService} from "@shared/services/loader.service";
 import {TranslateService} from "@ngx-translate/core";
 import {LIMIT} from "@assets/const";
+import * as XLSX from 'xlsx';
 
 export interface Response extends BaseObject{
   id: string;
@@ -39,6 +40,7 @@ export class ResponseListComponent extends BaseListComponent {
   filterDate: any;
   startTimeStamp: number;
   endTimeStamp: number;
+  filteredObjects: Response[];
 
   constructor(
       protected afs: AngularFirestore,
@@ -52,10 +54,12 @@ export class ResponseListComponent extends BaseListComponent {
   }
 
   mappingResponse(resp: any[]) {
-    return this.objectList = resp.map(a => {
+    this.objectList = resp.map(a => {
       this.loaderService.hide();
       return { id: a.payload.doc.id, ...a.payload.doc.data() } as Response;
     });
+    this.filteredObjects = this.objectList;
+    return this.filteredObjects;
   }
 
   onSelectDate(): void{
@@ -101,6 +105,43 @@ export class ResponseListComponent extends BaseListComponent {
         return this.firestoreQuery;
       });
       this.onAfterLoadData();
+    }
+  }
+
+  getRating(resp: any): any {
+    const keys = Object.keys(resp);
+    let rating = 0;
+    keys.forEach((key) => {
+      if (resp[key].order === 1) {
+        rating = resp[key].response;
+      }
+    })
+    return rating;
+  }
+
+  exportData(): void {
+    /* pass here the table id */
+    let element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    const now = new Date();
+    /* save to file */
+    XLSX.writeFile(wb, `export-${now.toLocaleString()}.xls`);
+  }
+
+  onSelectStore(e: any): void {
+    const value = e.target.value;
+    if (value === 'All') {
+      this.filteredObjects = this.objectList;
+    } else {
+      console.log(this.objectList);
+      this.filteredObjects = this.objectList.filter((res) => {
+        return res.store === value;
+      });
     }
   }
 }

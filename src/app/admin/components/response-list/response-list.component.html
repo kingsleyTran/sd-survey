@@ -5,6 +5,17 @@
 </header>
 <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
     <div class="flex justify-content-between">
+        <button (click)="exportData()"  type="button" class="calendar-btn rounded flex align-items-center">
+            Export
+            <svg class="w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25"></path>
+            </svg>
+        </button>
+        <select (change)="onSelectStore($event)">
+            <option value="All">All</option>
+            <option value="ns">North Strathfield</option>
+            <option value="penrith">Penrith</option>
+        </select>
         <div class="spacer"></div>
         <div class="input-group w-25">
             <input
@@ -28,7 +39,7 @@
         </div>
     </div>
 
-    <div class="overflow--auto relative shadow-md sm:rounded-lg">
+    <div class="overflow--auto relative shadow-md sm:rounded-lg mt-3">
         <table *ngIf="!isEmpty" class="w-full text-sm text-left text-gray-500 xxxx:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 xxxx:bg-gray-700 xxxx:text-gray-400">
             <tr>
@@ -55,7 +66,7 @@
             </thead>
             <tbody>
 
-            <tr *ngFor="let resp of objectList" class="cursor-pointer bg-white border-b xxxx:bg-gray-800 xxxx:border-gray-700 hover:bg-gray-50 xxxx:hover:bg-gray-600 hover:bg-sky-500" (click)="openDetailForm(resp.id)">
+            <tr *ngFor="let resp of filteredObjects" class="cursor-pointer bg-white border-b xxxx:bg-gray-800 xxxx:border-gray-700 hover:bg-gray-50 xxxx:hover:bg-gray-600 hover:bg-sky-500" (click)="openDetailForm(resp.id)">
                 <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     {{ resp.name }}
                 </td>
@@ -68,6 +79,67 @@
                 <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     <span *ngIf="!resp.googleReview" class="text-red-700">No</span>
                     <span *ngIf="resp.googleReview" class="text-green-700">Yes</span>
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ reviewHash[resp.store] }}
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ resp.createdAt | date:'YYYY-MM-dd HH:mm' }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table id="excel-table" *ngIf="!isEmpty" class="w-full text-sm text-left text-gray-500 xxxx:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 xxxx:bg-gray-700 xxxx:text-gray-400">
+            <tr>
+
+                <th scope="col" class="py-3 px-6">
+                    Name
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    Email
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    Phone
+                </th>
+                <th scope="col-2" class="py-3 px-6">
+                    Google Review ?
+                </th>
+                <th scope="col-2" class="py-3 px-6">
+                    Rating
+                </th>
+                <th scope="col-2" class="py-3 px-6">
+                    Comment
+                </th>
+                <th scope="col-2" class="py-3 px-6">
+                    Store
+                </th>
+                <th scope="col-2" class="py-3 px-6">
+                    Review date
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr *ngFor="let resp of filteredObjects" class="cursor-pointer bg-white border-b xxxx:bg-gray-800 xxxx:border-gray-700 hover:bg-gray-50 xxxx:hover:bg-gray-600 hover:bg-sky-500" (click)="openDetailForm(resp.id)">
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ resp.name }}
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ resp.email }}
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ resp.phone }}
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    <span *ngIf="!resp.googleReview" class="text-red-700">No</span>
+                    <span *ngIf="resp.googleReview" class="text-green-700">Yes</span>
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ getRating(resp.response) }}
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
+                    {{ resp.feedback }}
                 </td>
                 <td class="py-4 px-6 font-semibold text-gray-900 xxxx:text-white">
                     {{ reviewHash[resp.store] }}

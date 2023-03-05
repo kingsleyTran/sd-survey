@@ -1,7 +1,7 @@
 export const NEW = 'new';
 export const ACTIVE = 1;
 export const INACTIVE = 0;
-export const LIMIT = 200;
+export const LIMIT = 1000;
 export const FIXED_AMOUNT = 1;
 export const PERCENTAGE = 0;
 export const HIGHLIGHT = 1;
